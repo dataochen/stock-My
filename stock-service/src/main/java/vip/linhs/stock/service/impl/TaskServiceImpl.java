@@ -390,8 +390,8 @@ public class TaskServiceImpl implements TaskService {
             }
 
             TradeResultVo<CrGetDealDataResponse> crDealData = tradeApiService.crGetDealData(new CrGetDealDataRequest(tradeUser.getId()));
-            if (!dealData.success()) {
-                logger.error("runDealNotice error {}", dealData.getMessage());
+            if (!crDealData.success()) {
+                logger.error("runDealNotice error {}", crDealData.getMessage());
                 return;
             }
 

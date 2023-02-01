@@ -1,16 +1,11 @@
 package vip.linhs.stock.scheduled;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import vip.linhs.stock.api.TradeResultVo;
 import vip.linhs.stock.api.request.GetAssetsRequest;
 import vip.linhs.stock.api.response.GetAssetsResponse;
@@ -20,6 +15,10 @@ import vip.linhs.stock.model.po.Task;
 import vip.linhs.stock.service.HolidayCalendarService;
 import vip.linhs.stock.service.TaskService;
 import vip.linhs.stock.service.TradeApiService;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class ScheduledTasks {
@@ -37,6 +36,7 @@ public class ScheduledTasks {
 
     /**
      * begin of year
+     * 初始化当前年的节假日
      */
     @Scheduled(cron = "0 0 0 1 1 ?")
     public void runBeginOfYear() {
@@ -50,6 +50,7 @@ public class ScheduledTasks {
 
     /**
      * begin of day
+     * 每日6点 清除行情缓存
      */
     @Scheduled(cron = "0 0 6 ? * MON-FRI")
     public void runBeginOfDay() {
@@ -67,6 +68,7 @@ public class ScheduledTasks {
 
     /**
      * update of stock
+     * 每日9点 同步刷新股票基本信息
      */
     @Scheduled(cron = "0 0 9 ? * MON-FRI")
     public void runUpdateOfStock() {
@@ -84,6 +86,7 @@ public class ScheduledTasks {
 
     /**
      * update of daily index
+     * 每天17,18,19同步每日的行情
      */
     @Scheduled(cron = "0 0 17,18,19 ? * MON-FRI")
     public void runUpdateOfDailyIndex() {
@@ -100,12 +103,13 @@ public class ScheduledTasks {
     }
 
     /**
-     * ticker
+     * ticker 心跳 爬数据
+     * 每隔15秒发送一次 持仓股票的涨幅情况和自动买卖
      */
-    @Scheduled(cron = "0,15,30,45 * 9,10,11,13,14 ? * MON-FRI")
+//    @Scheduled(cron = "0,15,30,45 * 9,10,11,13,14 ? * MON-FRI")
     public void runTicker() {
         if (isNotBusinessTime()) {
-             return;
+            return;
         }
 
         try {
@@ -118,8 +122,9 @@ public class ScheduledTasks {
 
     /**
      * apply new stock
+     * 申购新股票？
      */
-    @Scheduled(cron = "0 1 10,14 ? * MON-FRI")
+//    @Scheduled(cron = "0 1 10,14 ? * MON-FRI")
     public void applyNewStock() {
         if (isNotBusinessTime()) {
             return;
@@ -133,6 +138,9 @@ public class ScheduledTasks {
         }
     }
 
+    /**
+     * 心跳 自动登陆
+     */
     @Scheduled(cron = "0 10,30,50 8-20 ? * MON-FRI")
     public void heartbeat() {
         if (isNotBusinessDate()) {
