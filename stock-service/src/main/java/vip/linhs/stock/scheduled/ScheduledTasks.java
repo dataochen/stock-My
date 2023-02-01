@@ -104,7 +104,7 @@ public class ScheduledTasks {
 
     /**
      * ticker 心跳 爬数据
-     * 每隔15秒发送一次 持仓股票的涨幅情况和自动买卖
+     * 每隔15秒发送一次 持仓股票本身涨幅情况和自动买卖
      */
 //    @Scheduled(cron = "0,15,30,45 * 9,10,11,13,14 ? * MON-FRI")
     public void runTicker() {

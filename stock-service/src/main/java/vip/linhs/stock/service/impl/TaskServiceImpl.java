@@ -366,6 +366,9 @@ public class TaskServiceImpl implements TaskService {
         pageVo.getData().forEach(v -> {
             if (v.isValid()) {
                 String beanName = v.getStrategyBeanName();
+                if (systemConfigService.isMock()) {
+                    beanName += "mock_";
+                }
                 StrategyHandler strategyHandler = SpringUtil.getBean(beanName, StrategyHandler.class);
                 try {
                     strategyHandler.handle(v);
